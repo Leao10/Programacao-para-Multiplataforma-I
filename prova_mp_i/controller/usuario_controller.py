@@ -15,3 +15,12 @@ async def create (request: UsuarioCreateDTO, user_repo: UsuarioRepository = Depe
     usuario_service = UsuarioService(user_repo)
     return usuario_service.create(request)
 
+@user_router.get('/{user_id}', status_code=200, description='Buscar o usuario por id', response_model=UsuarioDTO)
+async def find_by_id (user_id: int, user_repo: UsuarioRepository = Depends(get_user_repo)):
+    usuario_service = UsuarioService(user_repo)
+    return usuario_service.read(user_id=user_id)
+
+@user_router.get('/', status_code=200, description='Buscar todos os usuarios', response_model=list[UsuarioDTO])
+async def find_all (user_repo: UsuarioRepository = Depends(get_user_repo)):
+    usuario_service = UsuarioService(user_repo)
+    return usuario_service.find_all()
