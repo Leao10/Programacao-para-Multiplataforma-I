@@ -27,7 +27,7 @@ class UsuarioService:
     def _read(self, user_id: int) -> Usuario:
         user = self.usuario_repository.read(user_id)
         if user is None:
-            raise Exception(f'Usuário {user_id} não encontrado.')
+            raise HTTPException(status_code=404, detail=f'Usuário {user_id} não encontrado.')
         return user
 
     def find_all(self) -> list[UsuarioDTO]:
