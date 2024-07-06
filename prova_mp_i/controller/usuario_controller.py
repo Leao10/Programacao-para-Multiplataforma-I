@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from prova_mp_i.config.database import get_db
-from prova_mp_i.domain.dto.dtos import UsuarioDTO, UsuarioCreateDTO
+from prova_mp_i.domain.dto.dtos import UsuarioDTO, UsuarioCreateDTO, UsuarioUpdateDTO
 from prova_mp_i.repository.usuario_repository import UsuarioRepository
 from prova_mp_i.service.usuario_service import UsuarioService
 
@@ -24,3 +24,13 @@ async def find_by_id (user_id: int, user_repo: UsuarioRepository = Depends(get_u
 async def find_all (user_repo: UsuarioRepository = Depends(get_user_repo)):
     usuario_service = UsuarioService(user_repo)
     return usuario_service.find_all()
+
+@user_router.put('/{user_id}', status_code=200, description='Atualizar um usuario', response_model=UsuarioDTO)
+async def update (user_id: int, user_data: UsuarioUpdateDTO, user_repo: UsuarioRepository = Depends(get_user_repo)):
+    usuario_service = UsuarioService(user_repo)
+    return usuario_service.find_all()
+
+@user_router.delete('/{user_id}', status_code=204, description='Deletar o usuario por id')
+async def delete (user_id: int, user_repo: UsuarioRepository = Depends(get_user_repo)):
+    usuario_service = UsuarioService(user_repo)
+    usuario_service.delete(user_id=user_id)
