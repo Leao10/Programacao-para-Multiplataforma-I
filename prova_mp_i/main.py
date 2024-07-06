@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.openapi.docs import get_swagger_ui_html
+from fastapi.responses import JSONResponse
 from starlette.responses import RedirectResponse
 from prova_mp_i.controller.usuario_controller import user_router
 
@@ -34,6 +35,12 @@ app = FastAPI(
 
 app.include_router(user_router)
 
+@app.exception_handler(Exception)
+async def general_exception_handler(request, exc: Exception):
+    return JSONResponse(
+        status_code=500,
+        content={"message": "Um erro inesperado ocorreu no servidor"}
+    )
 
 @app.get('/', tags=['Redirect'], include_in_schema=False)
 async def redirect_to_docs():
