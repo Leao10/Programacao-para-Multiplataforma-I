@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.openapi.docs import get_swagger_ui_html
 from starlette.responses import RedirectResponse
+from prova_mp_i.controller.usuario_controller import user_router
 
 app = FastAPI(
     title="API de Usuários",
@@ -29,6 +30,9 @@ app = FastAPI(
         }
     ]
 )
+
+
+app.include_router(user_router)
 
 
 @app.get('/', tags=['Redirect'], include_in_schema=False)
