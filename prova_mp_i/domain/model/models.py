@@ -1,5 +1,4 @@
 from sqlalchemy import Column, Integer, String
-
 from prova_mp_i.config.database import Base, engine
 
 
