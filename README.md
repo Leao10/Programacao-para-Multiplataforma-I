@@ -1,1 +1,1 @@
-Nota: Usei pelo docker postgres, e funcionou o https da API até o momento.
+Nota: Usei pelo docker com postgres, está funcionou o https da API até o momento.
