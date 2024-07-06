@@ -1,48 +1,50 @@
-from prova_mp_i.config.database import get_db
-from prova_mp_i.domain.dto.dtos import UsuarioCreateDTO, UsuarioUpdateDTO
-from prova_mp_i.repository.usuario_repository import UsuarioRepository
-from prova_mp_i.domain.model.models import Usuario
-from prova_mp_i.service.usuario_service import UsuarioService
+from fastapi import FastAPI
+from fastapi.openapi.docs import get_swagger_ui_html
+from starlette.responses import RedirectResponse
+
+app = FastAPI(
+    title="API de Usuários",
+    description="APi para gerenciamento de usuários",
+    version="1.0.0",
+    openapi_url="/openapi.json",
+    docs_url=None,
+    redoc_url=None,
+    contact={
+        "name": "Gabriel Frigo",
+        "email": "gabriel.frigo@fatec.sp.gov.br",
+        "url": "https://gabrielfrigo.dev"
+    },
+    license_info={
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT"
+    },
+    servers=[
+        {
+            "url": "http://localhost:8000",
+            "description": "Development server"
+        },
+        {
+            "url": "http://user.gabrielfrigo.dev",
+            "description": "Production server"
+        }
+    ]
+)
 
 
-def main():
-    with get_db() as session:
+@app.get('/', tags=['Redirect'], include_in_schema=False)
+async def redirect_to_docs():
+    return RedirectResponse(url='/docs')
 
-        usuario_repository = UsuarioRepository(session=session)
-        usuario_service = UsuarioService(usuario_repository)
 
-        # CREATE
-        usuario_create_dto = UsuarioCreateDTO(
-            name="John Doe",
-            email="emiil@email.com",
-            password="123123",
-            cpf="12312312312",
-            phone="11999999999"
-        )
-        user_to_create = usuario_service.create(usuario_create_dto)
-
-        user_id = user_to_create.id
-        print(f'User created with id: {user_id}')
-
-        # READ
-        user_read = usuario_service .read(user_id=user_id)
-        print(f'user read: {user_read}')
-
-        # UPDATE
-        user_update_data = UsuarioUpdateDTO(
-            name="John Doe",
-            email="emiil@email.com",
-            password="123123",
-            cpf="12312312312",
-            phone="11999999999"        
-        )
-        user_updated = usuario_repository.update(user_id=user_id, user_data=user_update_data)
-        print(f'user updated: {user_updated}')
-
-        # DELETE
-        #user_deleted_id = usuario_repository.delete(user_id)
-        #print(f'user deleted with id: {user_deleted_id}')
+@app.get('/docs', tags=['Redirect'], include_in_schema=False)
+async def get_openapi():
+    return get_swagger_ui_html(
+        openapi_url="/openapi.json",
+        title="OpenApi UI"
+    )
 
 
 if __name__ == '__main__':
-    main()
+    import uvicorn
+
+    uvicorn.run(app, host='localhost', port=8000)
