@@ -28,7 +28,7 @@ async def find_all (user_repo: UsuarioRepository = Depends(get_user_repo)):
 @user_router.put('/{user_id}', status_code=200, description='Atualizar um usuario', response_model=UsuarioDTO)
 async def update (user_id: int, user_data: UsuarioUpdateDTO, user_repo: UsuarioRepository = Depends(get_user_repo)):
     usuario_service = UsuarioService(user_repo)
-    return usuario_service.find_all()
+    return usuario_service.update(user_id, user_data)
 
 @user_router.delete('/{user_id}', status_code=204, description='Deletar o usuario por id')
 async def delete (user_id: int, user_repo: UsuarioRepository = Depends(get_user_repo)):
