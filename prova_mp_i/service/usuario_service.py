@@ -7,12 +7,12 @@ from prova_mp_i.domain.dto.dtos import UsuarioCreateDTO, UsuarioDTO, UsuarioUpda
 from prova_mp_i.domain.model.models import Usuario
 from prova_mp_i.repository.usuario_repository import UsuarioRepository
 
+logger = logging.getLogger('fastapi')
 
 class UsuarioService:
 
     def __init__(self, usuario_repository: UsuarioRepository):
         self.usuario_repository = usuario_repository
-        self.logger = logging.getLogger('fastapi')
 
     def create(self, user_data: UsuarioCreateDTO) -> UsuarioDTO:
         self.logger.info('Criando um novo usuario')
@@ -25,6 +25,7 @@ class UsuarioService:
             raise HTTPException(status_code=409, detail=f'Usuario ja existe na base: {e.args[0]}')
 
     def read(self, user_id: int) -> UsuarioDTO:
+        self.logger.info('Buscando um usuario')
         return TypeAdapter(UsuarioDTO).validate_python(self._read(user_id))
 
     def _read(self, user_id: int) -> Usuario:
@@ -34,6 +35,7 @@ class UsuarioService:
         return user
 
     def find_all(self) -> list[UsuarioDTO]:
+        self.logger.info('Buscando todos os usuarios')
         users = self.usuario_repository.find_all()
         return [TypeAdapter(UsuarioDTO).validate_python(user) for user in users]
 
