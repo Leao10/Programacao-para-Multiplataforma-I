@@ -2,7 +2,11 @@ from fastapi import FastAPI, HTTPException
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.responses import JSONResponse
 from starlette.responses import RedirectResponse
+from prova_mp_i.config.log_config import setup_logging
 from prova_mp_i.controller.usuario_controller import user_router
+
+logger = setup_logging()
+logger.info('Iniciando a aplicação')
 
 app = FastAPI(
     title="API de Usuários",

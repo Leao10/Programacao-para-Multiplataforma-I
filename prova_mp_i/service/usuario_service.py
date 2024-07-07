@@ -1,3 +1,4 @@
+import logging
 from fastapi import HTTPException
 from pydantic import TypeAdapter
 from sqlalchemy.exc import IntegrityError
@@ -11,14 +12,16 @@ class UsuarioService:
 
     def __init__(self, usuario_repository: UsuarioRepository):
         self.usuario_repository = usuario_repository
+        self.logger = logging.getLogger('fastapi')
 
     def create(self, user_data: UsuarioCreateDTO) -> UsuarioDTO:
+        self.logger.info('Criando um novo usuario')
         user = Usuario(**user_data.model_dump())
         try:
             created = self.usuario_repository.save(user)
             return TypeAdapter(UsuarioDTO).validate_python(created)
         except IntegrityError as e:
-            print(f'Erro ao criar o usuário: {user_data.model_dump()}. Erro: {str(e)}')
+            self.logger.error(f'Erro ao criar o usuário: {user_data.model_dump()}', e)
             raise HTTPException(status_code=409, detail=f'Usuario ja existe na base: {e.args[0]}')
 
     def read(self, user_id: int) -> UsuarioDTO:
